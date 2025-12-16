@@ -1,0 +1,12 @@
+# Ignore node dependencies
+node_modules/
+**/node_modules/
+
+# Ignore React build
+build/
+**/build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,27 +1,26 @@
-# Use Node.js 18 (or your Jenkins-configured version)
+# Use Node 18
 FROM node:18
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy dependency files
 COPY package.json package-lock.json ./
-
-# Force install a compatible PostCSS version to fix the issue
-RUN npm install postcss@8.4.21 postcss-safe-parser@6.0.0 --legacy-peer-deps
 
 # Install dependencies
 RUN npm install
 
-# Copy the entire project
+# Copy app source
 COPY . .
 
-# Expose port 3000
+# Build the React app
+ENV NODE_OPTIONS=--openssl-legacy-provider
+RUN npm run build
+
+# Install serve to run production build
+RUN npm install -g serve
+
+# Expose port
 EXPOSE 3000
 
-# Set environment variable to prevent OpenSSL errors
-ENV NODE_OPTIONS=--openssl-legacy-provider
-ENV PORT=3000
-
-# Start the application
-CMD ["npm", "start"]
+# Serve production build
+CMD ["serve", "-s", "build", "-l", "3000"]
